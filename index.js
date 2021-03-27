@@ -4,6 +4,8 @@ const bodyParser = require('body-parser')
 const Controller = require('./controller')
 const puppeteer = require('./puppeteer')
 const useProxy = require('puppeteer-page-proxy')
+
+const path = require('path')
 const package = require(path.resolve('package.json'))
 const packageName = package && package.name
 const packageVersion = package && package.version
