@@ -9,8 +9,10 @@ const packageName = package && package.name
 const packageVersion = package && package.version
 
 module.exports = class Automator {
-  run = puppeteer.run
-  useProxy = useProxy
+  constructor() {
+    this.run = puppeteer.run
+    this.useProxy = useProxy
+  }
 
   async init() {
     const controller = new Controller()
