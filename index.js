@@ -29,7 +29,6 @@ module.exports = class Automator {
     // Custom services
     controller.routes.forEach(({ method, path, handler }) => {
       if (!['get', 'post', 'put', 'delete', 'all'].includes(method)) return
-      if (path == graphqlPath) return
       app[method](path, handler)
     })
 
