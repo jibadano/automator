@@ -96,18 +96,17 @@ const superSet = (page) => {
 
 const run = async (config, exec) => {
   const proxy = { ...config.proxy }
+  const { protocol, host, port, username, password } = proxy
   delete config.proxy
 
   config.args = config.args || []
 
-  if (proxy) {
-    const { host, port, protocol } = proxy
+  if (host)
     config.args.push(
       `--proxy-server=${protocol ? `${protocol}://` : ''}${host}${
         port ? `:${port}` : ''
       }`
     )
-  }
 
   const browser = await puppeteer.launch(config)
   const pages = await browser.pages()
@@ -115,14 +114,11 @@ const run = async (config, exec) => {
 
   superSet(page)
 
-  if (proxy) {
-    const { username, password } = proxy
-    if (username)
-      await page.authenticate({
-        username,
-        password
-      })
-  }
+  if (username)
+    await page.authenticate({
+      username,
+      password
+    })
 
   try {
     const result = await exec({ browser, page })
