@@ -3,7 +3,6 @@ const bodyParser = require('body-parser')
 
 const Controller = require('./controller')
 const puppeteer = require('./puppeteer')
-const useProxy = require('puppeteer-page-proxy')
 
 const path = require('path')
 const package = require(path.resolve('package.json'))
@@ -13,7 +12,6 @@ const packageVersion = package && package.version
 module.exports = class Automator {
   constructor() {
     this.run = puppeteer.run
-    this.useProxy = useProxy
   }
 
   async init() {

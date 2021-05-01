@@ -1,4 +1,6 @@
 const puppeteer = require('puppeteer-extra')
+const useProxy = require('puppeteer-page-proxy')
+
 const StealthPlugin = require('puppeteer-extra-plugin-stealth')
 puppeteer.use(StealthPlugin())
 
@@ -91,6 +93,16 @@ const superSet = (page) => {
     const frame = await elementHandle.contentFrame()
     if (!frame.getIframe) superSet(frame)
     return frame
+  }
+
+  page.__proto__.useProxy = async ({ host, port, username, password }) => {
+    await useProxy(page, `${host}${port ? `:${port}` : ''}`)
+
+    if (username)
+      await page.authenticate({
+        username,
+        password
+      })
   }
 }
 
