@@ -95,8 +95,17 @@ const superSet = (page) => {
     return frame
   }
 
-  page.__proto__.useProxy = async ({ host, port, username, password }) => {
-    await useProxy(page, `${host}${port ? `:${port}` : ''}`)
+  page.__proto__.useProxy = async function ({
+    protocol,
+    host,
+    port,
+    username,
+    password
+  }) {
+    await useProxy(
+      this,
+      `${protocol ? `${protocol}://` : ''}${host}${port ? `:${port}` : ''}`
+    )
 
     if (username)
       await page.authenticate({
@@ -107,11 +116,29 @@ const superSet = (page) => {
 }
 
 const run = async (config, exec) => {
+  const proxy = config.proxy
+  delete config.proxy
+
   const browser = await puppeteer.launch(config)
   const pages = await browser.pages()
   const page = pages[0]
 
   superSet(page)
+
+  if (proxy) {
+    const { host, port, protocol, username, password } = proxy
+
+    await useProxy(
+      page,
+      `${protocol ? `${protocol}://` : ''}${host}${port ? `:${port}` : ''}`
+    )
+
+    if (username)
+      await page.authenticate({
+        username,
+        password
+      })
+  }
 
   try {
     const result = await exec({ browser, page })
